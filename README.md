@@ -4,7 +4,18 @@
 
 # NestShop API
 
-### 1. Levantar la base de datos
+### 1. Clonar Proyecto
+### 2. Correr instalaciones
 ```
-docker-compose up -d
+$ npm i
+```
+### 3. Clonar el archivo ``.env.template`` y renombrarlo a ``.env``
+### 4. Agregar las variables de entorno
+### 5. Levantar la base de datos
+```
+$ docker-compose up -d
+```
+### 6. Correr el ambiente de desarrollo
+```
+$ npm run start:dev
 ```

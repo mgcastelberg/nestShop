@@ -4,6 +4,8 @@
 /build
 /postgres
 postgres/
+/mysql
+mysql/
 
 # Logs
 logs

@@ -10,7 +10,7 @@ export class Product {
     @Column('varchar',{unique: true})
     title: string;
 
-    @Column('numeric',{ default: 0 })
+    @Column('float',{ default: 0 })
     price: number;
 
     @Column({ type: 'text', nullable: true })
@@ -36,8 +36,8 @@ export class Product {
     @Column('enum', { enum: ['men', 'women', 'kid', 'unisex'] })
     gender: string;
 
-    @Column({ type: 'decimal', nullable: false })
-    subtotal: number;
+    // @Column({ type: 'decimal', nullable: false })
+    // subtotal: number;
 
     @BeforeInsert()
     private setId(): void {

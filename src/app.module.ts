@@ -15,7 +15,7 @@ import { Product } from './products/entities/product.entity';
       password: process.env.DB_PASSWORD,
       database: 'NestDB',
       entities: [Product],
-      synchronize: true,
+      synchronize: false,
     }),
     ProductsModule
   ],

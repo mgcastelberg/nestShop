@@ -31,8 +31,9 @@ export class Product {
   @BeforeInsert()
   private generateSlug(): void {
     if (!this.slug) {
-      this.slug = this.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+      this.slug = this.title;
     }
+    this.slug = this.slug.toLowerCase().replace(/ /g, '_').replace(/[^\w-]+/g, '');
   }
 }
 

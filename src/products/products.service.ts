@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class ProductsService {
@@ -36,10 +37,17 @@ export class ProductsService {
     });
   }
 
-  async findOne(id: string) {
-    const productDB = await this.productRepository.findOneBy({ id });
+  async findOne(term: string) {
+    let productDB: Product;
+
+    if ( isUUID(term) ) {
+      productDB = await this.productRepository.findOneBy({ id: term });
+    } else {
+      productDB = await this.productRepository.findOneBy({ slug: term });
+    }
+
     if (!productDB) {
-      throw new NotFoundException(`El producto con el id ${id} no existe`);
+      throw new NotFoundException(`El producto con el termino ${term} no existe`);
     }
     return productDB;
   }

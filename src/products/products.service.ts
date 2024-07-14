@@ -56,8 +56,20 @@ export class ProductsService {
     return productDB;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const productDB = await this.productRepository.preload({
+      id: id,
+      ...updateProductDto
+    });
+    if (!productDB) {
+      throw new NotFoundException(`El producto con el id ${id} no existe`);
+    }
+    try {
+      await this.productRepository.save(productDB);
+      return productDB;
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 
   // Nota recordar que productRepository devuelve una promesa

@@ -28,6 +28,9 @@ export class Product {
   @Column('enum', { enum: ['men', 'women', 'kid', 'unisex'] })
   gender: string;
 
+  @Column('json', { nullable: true })
+  tags: string[];
+
   @BeforeInsert()
   private generateSlug(): void {
     console.log('BeforeInsert Triggered');

@@ -1,5 +1,5 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
@@ -30,11 +30,22 @@ export class Product {
 
   @BeforeInsert()
   private generateSlug(): void {
+    console.log('BeforeInsert Triggered');
     if (!this.slug) {
       this.slug = this.title;
     }
     this.slug = this.slug.toLowerCase().replace(/ /g, '_').replace(/[^\w-]+/g, '');
   }
+
+  @BeforeUpdate()
+  private checkSlugUpdate(){
+      console.log('BeforeUpdate Triggered');
+      if (!this.slug){
+        this.slug = this.title
+      }
+      this.slug = this.slug.toLowerCase().replace(/ /g, '_').replace(/[^\w-]+/g, '');
+  }
+
 }
 
     // Only apply to postgres

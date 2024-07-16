@@ -1,6 +1,7 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate, OneToMany } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { ProductImage } from './product-image.entity';
 
 @Entity()
 export class Product {
@@ -30,6 +31,14 @@ export class Product {
 
   @Column('json', { nullable: true })
   tags: string[];
+
+  // Relacion entre tablas
+  @OneToMany(
+    () => ProductImage, 
+    (productImage) => productImage.product,
+    { cascade: true }
+  )
+  images?: ProductImage
 
   @BeforeInsert()
   private generateSlug(): void {

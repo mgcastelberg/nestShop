@@ -16,7 +16,8 @@ import { CommonModule } from './common/common.module';
       password: process.env.DB_PASSWORD,
       database: 'NestDB',
       entities: [Product],
-      synchronize: false,
+      autoLoadEntities: true,
+      synchronize: true,
     }),
     ProductsModule,
     CommonModule

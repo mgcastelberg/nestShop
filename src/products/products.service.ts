@@ -97,14 +97,32 @@ export class ProductsService {
     if (!productDB) throw new NotFoundException(`El producto con el id ${id} no existe`);
     
     // Crear query runner
-    // const queryRunner = this.dataSource.createQueryRunner();
-    // await queryRunner.connect();
-    // await queryRunner.startTransaction();
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
     try {
-      await this.productRepository.save(productDB);
-      return productDB;
+
+      if ( images ) {
+        await queryRunner.manager.delete( ProductImage, { product: { id } } );
+        productDB.images = images.map(
+          image => this.productImageRepository.create({ url: image })
+        )
+      }
+
+      // Hace el update, pero no esta impactando la base datos
+      await queryRunner.manager.save( productDB );
+
+      // realizar el commit de la transacción
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
+
+      return this.findOnePlain(id);
+
     } catch (error) {
+      // Si falla el commit de la transacción
+      await queryRunner.rollbackTransaction();
+      await queryRunner.release();
       this.handleDBExceptions(error);
     }
   }

@@ -39,12 +39,20 @@ export class ProductsService {
     }
   }
 
-  findAll( paginationDto: PaginationDto) {
+  async findAll( paginationDto: PaginationDto) {
     const { limit, offset } = paginationDto;
-    return this.productRepository.find({
+    const products = await this.productRepository.find({
       take: limit,
-      skip: offset
+      skip: offset,
+      relations: {
+        images: true
+      }
     });
+
+    return products.map( product => ({
+      ...product,
+      images: product.images.map( img => img.url )
+    }));
   }
 
   async findOne(term: string) {
@@ -53,17 +61,28 @@ export class ProductsService {
     if ( isUUID(term) ) {
       productDB = await this.productRepository.findOneBy({ id: term });
     } else {
-      const queryBuilder = this.productRepository.createQueryBuilder();
+      const queryBuilder = this.productRepository.createQueryBuilder('prod');
       productDB = await queryBuilder.where('LOWER(title) =:title or slug =:slug', { 
         title: term.toLowerCase(),
         slug: term.toLowerCase()
-      }).getOne();
+      })
+      .leftJoinAndSelect('prod.images', 'images')
+      .getOne();
     }
 
     if (!productDB) {
       throw new NotFoundException(`El producto con el termino ${term} no existe`);
     }
     return productDB;
+  }
+
+  // metodo para aplanar las imagenes
+  async findOnePlain(term: string) {
+    const { images = [], ...product } = await this.findOne(term);
+    return {
+      ...product,
+      images: images.map( image => image.url )
+    }
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {

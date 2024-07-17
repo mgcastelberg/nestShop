@@ -17,7 +17,7 @@ import { CommonModule } from './common/common.module';
       database: 'NestDB',
       entities: [Product],
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
     ProductsModule,
     CommonModule

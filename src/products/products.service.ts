@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger, 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { isUUID } from 'class-validator';
@@ -21,6 +21,8 @@ export class ProductsService {
 
     @InjectRepository(ProductImage)
     private readonly productImageRepository: Repository<ProductImage>,
+    
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
@@ -86,14 +88,19 @@ export class ProductsService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-    const productDB = await this.productRepository.preload({
-      id: id,
-      ...updateProductDto,
-      images: []
-    });
-    if (!productDB) {
-      throw new NotFoundException(`El producto con el id ${id} no existe`);
-    }
+
+    const { images, ...toUpdate } = updateProductDto;
+
+    const productDB = await this.productRepository.preload({ id, ...toUpdate });
+
+
+    if (!productDB) throw new NotFoundException(`El producto con el id ${id} no existe`);
+    
+    // Crear query runner
+    // const queryRunner = this.dataSource.createQueryRunner();
+    // await queryRunner.connect();
+    // await queryRunner.startTransaction();
+
     try {
       await this.productRepository.save(productDB);
       return productDB;

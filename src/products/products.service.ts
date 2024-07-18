@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, Query } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -129,11 +129,11 @@ export class ProductsService {
 
   // Nota recordar que productRepository devuelve una promesa
   async remove(id: string) {
-    const productDB = await this.productRepository.findOneBy({ id });
+    const productDB = await this.findOne(id);
     if (!productDB) {
       throw new BadRequestException(`El producto con el id ${id} no existe`);
     }
-    await this.productRepository.delete(id);
+    await this.productRepository.remove(productDB);
     return { deleted: true, detail: `Producto con el id ${id} eliminado` };
   }
 
@@ -151,4 +151,16 @@ export class ProductsService {
           throw new InternalServerErrorException("Unexpected error, check server logs");
       }
   }
+
+  async deleteAllProducts() {
+    const query = this.productRepository.createQueryBuilder('product');
+    try {
+      return await query.delete()
+        .where({})
+        .execute();
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
+  }
+
 }

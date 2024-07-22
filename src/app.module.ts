@@ -5,6 +5,7 @@ import { ProductsModule } from './products/products.module';
 import { Product } from './products/entities/product.entity';
 import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -18,11 +19,12 @@ import { SeedModule } from './seed/seed.module';
       database: 'NestDB',
       entities: [Product],
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
     ProductsModule,
     CommonModule,
-    SeedModule
+    SeedModule,
+    FilesModule
   ],
   controllers: [],
   providers: [],

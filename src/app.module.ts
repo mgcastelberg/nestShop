@@ -1,3 +1,4 @@
+import { join } from 'path'; // propio de node
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -6,6 +7,7 @@ import { Product } from './products/entities/product.entity';
 import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
@@ -20,6 +22,9 @@ import { FilesModule } from './files/files.module';
       entities: [Product],
       autoLoadEntities: true,
       synchronize: false,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname,'..','public')
     }),
     ProductsModule,
     CommonModule,

@@ -6,6 +6,7 @@
 postgres/
 /mysql
 mysql/
+static/products/*
 
 # Logs
 logs

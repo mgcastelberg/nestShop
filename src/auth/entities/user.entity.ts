@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'app_users' })
 export class User {
@@ -13,11 +13,18 @@ export class User {
     password: string;
 
     @Column('varchar', { length: 255 })
-    fullname: string;
+    fullName: string;
 
     @Column('boolean', { default: true })
     isActive: boolean;
 
     @Column('json', { nullable: true })
     roles: string[];
+
+    @BeforeInsert()
+    setDefaultRoles() {
+        if (!this.roles) {
+            this.roles = ['user'];
+        }
+    }
 }

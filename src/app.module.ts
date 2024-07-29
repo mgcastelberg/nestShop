@@ -8,6 +8,8 @@ import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AuthModule } from './auth/auth.module';
+import { User } from './auth/entities/user.entity';
 
 @Module({
   imports: [
@@ -19,9 +21,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: 'NestDB',
-      entities: [Product],
+      entities: [Product, User],
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname,'..','public')
@@ -29,7 +31,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     ProductsModule,
     CommonModule,
     SeedModule,
-    FilesModule
+    FilesModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],

@@ -23,7 +23,7 @@ import { User } from './auth/entities/user.entity';
       database: 'NestDB',
       entities: [Product, User],
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname,'..','public')

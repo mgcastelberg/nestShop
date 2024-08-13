@@ -42,7 +42,10 @@ export class AuthService {
       // Retornar el objeto insertado
       return {
         ...user,
-        token: this.getJwtToken({ email: user.email })
+        token: this.getJwtToken({ 
+          id: user.id,
+          email: user.email 
+        })
       };
 
     } catch (error) {
@@ -71,7 +74,10 @@ export class AuthService {
       return {
         id: user.id,
         email: user.email,
-        token: this.getJwtToken({ email: user.email })
+        token: this.getJwtToken({ 
+          id: user.id,
+          email: user.email 
+        })
       };
       
   }

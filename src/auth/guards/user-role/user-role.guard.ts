@@ -14,8 +14,9 @@ export class UserRoleGuard implements CanActivate {
     console.log('UserRoleGuard');
 
     const validRoles: string[] = this.reflector.get('roles', context.getHandler());
-
     console.log({validRoles});
+
+    
 
     return true;
   }

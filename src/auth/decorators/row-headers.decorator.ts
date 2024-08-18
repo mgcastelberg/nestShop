@@ -9,6 +9,4 @@ export const RawHeaders  = createParamDecorator( (data, ctx: ExecutionContext) =
 
     // Mejora primero se valido que el usuario exista y luego retornamos el dato si existe
     return (!data) ? headers : headers[data];
-
-    return headers;
 })

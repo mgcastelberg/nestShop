@@ -17,12 +17,12 @@ export class SeedService {
 
     const producs = initialData.products;
 
-    const insertPromises = [];
-    producs.forEach( product => {
-      insertPromises.push(this.productService.create(product));
-    });
+    // const insertPromises = [];
+    // producs.forEach( product => {
+    //   insertPromises.push(this.productService.create(product));
+    // });
 
-    await Promise.all(insertPromises);
+    // await Promise.all(insertPromises);
 
     return true;
   }

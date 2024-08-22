@@ -7,6 +7,7 @@ import { Product } from './entities/product.entity';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { isUUID } from 'class-validator';
 import { ProductImage } from './entities';
+import { User } from '../auth/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -25,14 +26,15 @@ export class ProductsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
     try {
       // Operador Rest
       const { images = [], ...poducDetails } = createProductDto;
 
       const product = this.productRepository.create({
         ...createProductDto,
-        images: images.map( image => this.productImageRepository.create({ url: image }))
+        images: images.map( image => this.productImageRepository.create({ url: image })),
+        user
       });
       await this.productRepository.save( product );
       return {...product, images};
@@ -87,7 +89,7 @@ export class ProductsService {
     }
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto, user: User) {
 
     const { images, ...toUpdate } = updateProductDto;
 
@@ -110,6 +112,7 @@ export class ProductsService {
         )
       }
 
+      productDB.user = user; // Añadimos el user que esta haciendo la actualizaciòn
       // Hace el update, pero no esta impactando la base datos
       await queryRunner.manager.save( productDB );
 

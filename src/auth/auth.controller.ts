@@ -8,6 +8,7 @@ import { RawHeaders } from './decorators/row-headers.decorator';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
 import { RoleProtected } from './decorators/role-protected.decorator';
 import { ValidRoles } from './interfaces';
+import { Auth } from './decorators';
 
 @Controller('auth')
 export class AuthController {
@@ -49,6 +50,18 @@ export class AuthController {
   @RoleProtected( ValidRoles.superUser )
   @UseGuards( AuthGuard(), UserRoleGuard )
   privateRoute2(
+    @GetUser() user: User
+  ) {
+    return {
+      ok: true,
+      user
+    };
+  }
+
+  // para tener un unico decorador para proteger la ruta
+  @Get('private3')
+  @Auth(ValidRoles.admin, ValidRoles.superUser)
+  privateRoute3(
     @GetUser() user: User
   ) {
     return {

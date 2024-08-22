@@ -1,7 +1,8 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate, OneToMany, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate, OneToMany, PrimaryColumn, ManyToOne } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { ProductImage } from './product-image.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -39,6 +40,13 @@ export class Product {
     { cascade: true, eager: true }
   )
   images?: ProductImage[];
+
+  @ManyToOne(
+    () => User,
+    (user) => user.product,
+    { eager: true } // para que cuando se consulte se muestre el usuario
+  )
+  user?: User;
 
   @BeforeInsert()
   private generateSlug(): void {

@@ -24,6 +24,15 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
+  @Get('refresh-token')
+  @Auth()
+  checkAuthStatus(
+    @GetUser() user: User
+  ){
+    console.log('object');
+    return this.authService.checkAuthStatus(user);
+  }
+
   @Get('private')
   @UseGuards( AuthGuard() )
   testing(

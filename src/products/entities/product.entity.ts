@@ -50,7 +50,7 @@ export class Product {
 
   @BeforeInsert()
   private generateSlug(): void {
-    console.log('BeforeInsert Triggered');
+    // console.log('BeforeInsert Triggered');
     if (!this.slug) {
       this.slug = this.title;
     }
@@ -59,7 +59,7 @@ export class Product {
 
   @BeforeUpdate()
   private checkSlugUpdate(){
-      console.log('BeforeUpdate Triggered');
+      // console.log('BeforeUpdate Triggered');
       if (!this.slug){
         this.slug = this.title
       }

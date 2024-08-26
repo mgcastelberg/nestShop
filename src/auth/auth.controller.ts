@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, UseGuards, Req, SetMetadata } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -17,16 +17,23 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @ApiResponse({status: 201, description: 'User Registered', type: User})
+  @ApiResponse({status: 400, description: 'Bad request'})
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.create(createUserDto);
   }
 
   @Post('login')
+  @ApiResponse({status: 200, description: 'User logged', type: User})
+  @ApiResponse({status: 400, description: 'Bad request'})
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
   }
 
   @Get('refresh-token')
+  @ApiBearerAuth()
+  @ApiResponse({status: 200, description: 'Refresh User Token logged', type: User})
+  @ApiResponse({status: 400, description: 'Bad request'})
   @Auth()
   checkAuthStatus(
     @GetUser() user: User
@@ -36,6 +43,9 @@ export class AuthController {
   }
 
   @Get('private')
+  @ApiBearerAuth()
+  @ApiResponse({status: 200, description: 'Validate Role User', type: User})
+  @ApiResponse({status: 400, description: 'Bad request'})
   @UseGuards( AuthGuard() )
   testing(
     @Req() request: Express.Request,
@@ -58,6 +68,9 @@ export class AuthController {
 
   // @SetMetadata('roles', ['admin','super-user'])
   @Get('private2')
+  @ApiBearerAuth()
+  @ApiResponse({status: 200, description: 'Validate Role Super User', type: User})
+  @ApiResponse({status: 400, description: 'Bad request'})
   @RoleProtected( ValidRoles.superUser )
   @UseGuards( AuthGuard(), UserRoleGuard )
   privateRoute2(
@@ -71,6 +84,9 @@ export class AuthController {
 
   // para tener un unico decorador para proteger la ruta
   @Get('private3')
+  @ApiBearerAuth()
+  @ApiResponse({status: 200, description: 'Validate Role Admin and Super User', type: User})
+  @ApiResponse({status: 400, description: 'Bad request'})
   @Auth(ValidRoles.admin, ValidRoles.superUser)
   privateRoute3(
     @GetUser() user: User

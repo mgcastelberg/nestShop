@@ -20,6 +20,7 @@ async function bootstrap() {
     .setTitle('NestShop API')
     .setDescription('NestShop API endpoints')
     .setVersion('1.0')
+    .addBearerAuth() // Habilitar autenticación con Bearer token
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
